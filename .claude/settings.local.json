@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(bun add:*)",
+      "Bash(bun run type-check:*)",
+      "Bash(bun run build)",
+      "Bash(bun dev:*)",
+      "Bash(bunx tsc:*)",
+      "Bash(bun run dev:*)",
+      "Bash(node:*)",
+      "Bash(chmod:*)",
+      "Bash(wc:*)",
+      "Bash(find:*)",
+      "Bash(git -C /Users/prodgain/Documents/cli status:*)",
+      "Bash(bun:*)",
+      "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && head -10 {}')",
+      "Bash(__NEW_LINE_060dd81fdc3f6169__ echo \"\")",
+      "Bash(__NEW_LINE_9f83ff59159ef844__ echo \"\")",
+      "Bash(__NEW_LINE_618ccd8d4d53005b__ echo \"\")",
+      "WebSearch",
+      "WebFetch(domain:github.com)"
+    ]
+  }
+}
