@@ -55,6 +55,7 @@ Desktop.ini
 .classpath
 .settings/
 .factorypath
+.claude/
 
 # Temporary files
 *.tmp
