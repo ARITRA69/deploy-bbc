@@ -16,6 +16,7 @@ import { ratelimit_installer } from "./ratelimit.js";
 import { observability_installer } from "./observability.js";
 import { docs_installer } from "./docs.js";
 import { testing_installer } from "./testing.js";
+import { validation_installer } from "./validation.js";
 import { env_variables_installer } from "./env-variables.js";
 
 /**
@@ -109,6 +110,10 @@ export function build_installer_map(
     testing: {
       inUse: has_package(AvailablePackages.vitest),
       installer: testing_installer,
+    },
+    validation: {
+      inUse: has_package(AvailablePackages.zod, AvailablePackages.yup),
+      installer: validation_installer,
     },
     envVariables: {
       inUse: true, // Always run to create .env files

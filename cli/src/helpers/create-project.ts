@@ -25,6 +25,7 @@ export async function create_project(cliResults: CliResults): Promise<void> {
     const installerOptions: InstallerOptions = {
       projectDir,
       appName: projectName,
+      framework: cliResults.framework,
       packages: cliResults.packages,
       noInstall: cliResults.flags.noInstall,
     };

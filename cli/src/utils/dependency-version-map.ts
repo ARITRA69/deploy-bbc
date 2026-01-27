@@ -5,6 +5,8 @@
 export const DEPENDENCY_VERSION_MAP: Record<string, string> = {
   // Core Framework
   "hono": "^4.0.0",
+  "express": "^4.18.2",
+  "@types/express": "^4.17.21",
 
   // Database Drivers
   "postgres": "^3.4.4",
@@ -73,6 +75,7 @@ export const DEPENDENCY_VERSION_MAP: Record<string, string> = {
 
   // Utilities
   "zod": "^3.22.4",
+  "yup": "^1.3.3",
   "dotenv": "^16.3.1",
   "cors": "^2.8.5",
   "@types/cors": "^2.8.17",

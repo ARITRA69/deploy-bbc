@@ -20,6 +20,10 @@ export const run_cli = async (): Promise<CliResults> => {
     .option("--default", "Use default options", defaultOptions.default)
     // CI Mode
     .option("--CI", "Run in CI mode (non-interactive)", defaultOptions.CI)
+    // Framework options
+    .option("--hono", "Use Hono framework (default)")
+    .option("--express", "Use Express framework")
+    .option("--bun-native", "Use Bun native HTTP server")
     // Database options
     .option("--postgres", "Include PostgreSQL")
     .option("--mysql", "Include MySQL")
@@ -56,6 +60,9 @@ export const run_cli = async (): Promise<CliResults> => {
     .option("--swagger", "Include Swagger/OpenAPI")
     .option("--scalar", "Include Scalar API docs")
     .option("--vitest", "Include Vitest testing")
+    // Validation options
+    .option("--zod", "Include Zod validation")
+    .option("--yup", "Include Yup validation")
     .parse(process.argv);
 
   const cliProvidedName = program.args[0];
@@ -100,6 +107,29 @@ export const run_cli = async (): Promise<CliResults> => {
             if (!/^[a-z0-9-_]+$/i.test(value))
               return "Only letters, numbers, dashes and underscores";
           },
+        }),
+
+      framework: () =>
+        p.select<any, "hono" | "express" | "bun-native">({
+          message: "Which framework would you like to use?",
+          options: [
+            {
+              value: "hono",
+              label: "Hono",
+              hint: "Ultrafast web framework (recommended)",
+            },
+            {
+              value: "express",
+              label: "Express",
+              hint: "Battle-tested Node.js framework",
+            },
+            {
+              value: "bun-native",
+              label: "Bun Native",
+              hint: "Native Bun.serve() API",
+            },
+          ],
+          initialValue: "hono",
         }),
 
       databases: () =>
@@ -297,6 +327,25 @@ export const run_cli = async (): Promise<CliResults> => {
           initialValue: true,
         }),
 
+      validation: () =>
+        p.select<any, AvailablePackages | "none">({
+          message: "Request validation library:",
+          options: [
+            {
+              value: AvailablePackages.zod,
+              label: "Zod",
+              hint: "TypeScript-first, lightweight",
+            },
+            {
+              value: AvailablePackages.yup,
+              label: "Yup",
+              hint: "Schema builder, runtime validation",
+            },
+            { value: "none", label: "None" },
+          ],
+          initialValue: AvailablePackages.zod,
+        }),
+
       installDeps: () =>
         p.confirm({
           message: "Install dependencies?",
@@ -329,10 +378,12 @@ export const run_cli = async (): Promise<CliResults> => {
     typeof project.backgroundJobs === "string" && project.backgroundJobs !== "none" ? project.backgroundJobs as AvailablePackages : null,
     typeof project.apiDocs === "string" && project.apiDocs !== "none" ? project.apiDocs as AvailablePackages : null,
     project.testing ? AvailablePackages.vitest : null,
+    typeof project.validation === "string" && project.validation !== "none" ? project.validation as AvailablePackages : null,
   ].filter(Boolean) as AvailablePackages[];
 
   return {
     appName: project.projectName as string,
+    framework: project.framework as "hono" | "express" | "bun-native",
     packages,
     flags: {
       ...defaultOptions,
@@ -355,9 +406,14 @@ function add_cli_header(title: string) {
 // Build project from CLI flags (CI mode)
 function build_from_flags(
   appName: string | undefined,
-  flags: CliFlags
+  flags: CliFlags & { hono?: boolean; express?: boolean; "bun-native"?: boolean }
 ): CliResults {
   const packages: AvailablePackages[] = [];
+
+  // Determine framework
+  let framework: "hono" | "express" | "bun-native" = "hono";
+  if (flags.express) framework = "express";
+  else if (flags["bun-native"]) framework = "bun-native";
 
   // Add packages based on flags
   if (flags.postgres) packages.push(AvailablePackages.postgres);
@@ -381,9 +437,12 @@ function build_from_flags(
   if (flags.swagger) packages.push(AvailablePackages.swagger);
   if (flags.scalar) packages.push(AvailablePackages.scalar);
   if (flags.vitest) packages.push(AvailablePackages.vitest);
+  if (flags.zod) packages.push(AvailablePackages.zod);
+  if (flags.yup) packages.push(AvailablePackages.yup);
 
   return {
     appName: appName || "my-backend",
+    framework,
     packages,
     flags,
   };

@@ -46,10 +46,17 @@ export interface CliFlags {
   swagger?: boolean;
   scalar?: boolean;
   vitest?: boolean;
+
+  // Validation flags
+  zod?: boolean;
+  yup?: boolean;
 }
+
+export type Framework = "hono" | "express" | "bun-native";
 
 export interface CliResults {
   appName: string;
+  framework: Framework;
   packages: AvailablePackages[];
   flags: CliFlags;
 }
@@ -95,12 +102,17 @@ export enum AvailablePackages {
   swagger = "swagger",
   scalar = "scalar",
   vitest = "vitest",
+
+  // Validation
+  zod = "zod",
+  yup = "yup",
 }
 
 export interface InstallerOptions {
   projectDir: string;
   packages: AvailablePackages[];
   appName: string;
+  framework: Framework;
   noInstall: boolean;
 }
 

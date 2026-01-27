@@ -17,7 +17,7 @@ const __dirname = path.dirname(__filename);
 export async function scaffold_project(
   options: InstallerOptions
 ): Promise<void> {
-  const { projectDir, appName } = options;
+  const { projectDir, appName, framework } = options;
   const spinner = ora("Scaffolding project...").start();
 
   try {
@@ -35,8 +35,14 @@ export async function scaffold_project(
     // Ensure project directory exists
     await fs.ensureDir(projectDir);
 
-    // Copy base template
-    const templateDir = path.resolve(__dirname, "../templates/base");
+    // Select base template based on framework
+    const templateDirName = framework === "hono"
+      ? "base"
+      : framework === "express"
+        ? "base-express"
+        : "base-bun-native";
+
+    const templateDir = path.resolve(__dirname, `../templates/${templateDirName}`);
     await fs.copy(templateDir, projectDir, {
       overwrite: false,
       errorOnExist: false,
