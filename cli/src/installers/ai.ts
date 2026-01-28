@@ -35,7 +35,7 @@ export async function ai_installer(options: InstallerOptions): Promise<void> {
 }
 
 async function install_openai(projectDir: string): Promise<void> {
-  const templateDir = path.resolve(__dirname, "../templates/extras/ai/openai");
+  const templateDir = path.resolve(__dirname, "templates/extras/ai/openai");
   await copy_template_files(templateDir, projectDir);
 
   await add_package_dependency(projectDir, {
@@ -51,7 +51,7 @@ async function install_openai(projectDir: string): Promise<void> {
 async function install_anthropic(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/ai/anthropic"
+    "templates/extras/ai/anthropic"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -66,7 +66,7 @@ async function install_anthropic(projectDir: string): Promise<void> {
 }
 
 async function install_gemini(projectDir: string): Promise<void> {
-  const templateDir = path.resolve(__dirname, "../templates/extras/ai/gemini");
+  const templateDir = path.resolve(__dirname, "templates/extras/ai/gemini");
   await copy_template_files(templateDir, projectDir);
 
   await add_package_dependency(projectDir, {
@@ -82,7 +82,7 @@ async function install_gemini(projectDir: string): Promise<void> {
 async function install_vercel_ai(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/ai/vercel-ai"
+    "templates/extras/ai/vercel-ai"
   );
   await copy_template_files(templateDir, projectDir);
 

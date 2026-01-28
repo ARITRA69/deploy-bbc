@@ -33,7 +33,7 @@ export async function observability_installer(
 async function install_sentry(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/observability/sentry"
+    "templates/extras/observability/sentry"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -50,7 +50,7 @@ async function install_sentry(projectDir: string): Promise<void> {
 async function install_logtail(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/observability/logtail"
+    "templates/extras/observability/logtail"
   );
   await copy_template_files(templateDir, projectDir);
 

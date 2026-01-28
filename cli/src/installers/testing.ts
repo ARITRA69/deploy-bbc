@@ -30,7 +30,7 @@ export async function testing_installer(
 async function install_vitest(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/testing/vitest"
+    "templates/extras/testing/vitest"
   );
   await copy_template_files(templateDir, projectDir);
 

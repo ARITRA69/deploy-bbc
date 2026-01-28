@@ -36,7 +36,7 @@ export async function email_installer(
 async function install_resend(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/email/resend"
+    "templates/extras/email/resend"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -53,7 +53,7 @@ async function install_resend(projectDir: string): Promise<void> {
 async function install_sendgrid(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/email/sendgrid"
+    "templates/extras/email/sendgrid"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -70,7 +70,7 @@ async function install_sendgrid(projectDir: string): Promise<void> {
 async function install_nodemailer(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/email/nodemailer"
+    "templates/extras/email/nodemailer"
   );
   await copy_template_files(templateDir, projectDir);
 

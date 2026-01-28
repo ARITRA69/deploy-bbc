@@ -42,7 +42,7 @@ async function install_postgres(projectDir: string): Promise<void> {
   // Copy template files
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/database/postgres"
+    "templates/extras/database/postgres"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -74,7 +74,7 @@ async function install_mysql(projectDir: string): Promise<void> {
   // Copy template files
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/database/mysql"
+    "templates/extras/database/mysql"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -106,7 +106,7 @@ async function install_mongodb(projectDir: string): Promise<void> {
   // Copy template files
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/database/mongodb"
+    "templates/extras/database/mongodb"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -126,7 +126,7 @@ async function install_redis(projectDir: string): Promise<void> {
   // Copy template files
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/database/redis"
+    "templates/extras/database/redis"
   );
   await copy_template_files(templateDir, projectDir);
 

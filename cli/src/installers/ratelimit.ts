@@ -33,7 +33,7 @@ export async function ratelimit_installer(
 async function install_upstash_ratelimit(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/ratelimit/upstash"
+    "templates/extras/ratelimit/upstash"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -51,7 +51,7 @@ async function install_upstash_ratelimit(projectDir: string): Promise<void> {
 async function install_custom_ratelimit(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/ratelimit/custom"
+    "templates/extras/ratelimit/custom"
   );
   await copy_template_files(templateDir, projectDir);
 

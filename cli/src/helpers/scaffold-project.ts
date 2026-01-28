@@ -42,7 +42,7 @@ export async function scaffold_project(
         ? "base-express"
         : "base-bun-native";
 
-    const templateDir = path.resolve(__dirname, `../templates/${templateDirName}`);
+    const templateDir = path.resolve(__dirname, `templates/${templateDirName}`);
     await fs.copy(templateDir, projectDir, {
       overwrite: false,
       errorOnExist: false,

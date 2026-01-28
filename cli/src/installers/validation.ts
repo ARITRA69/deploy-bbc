@@ -33,7 +33,7 @@ export async function validation_installer(
 async function install_zod(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/validation/zod"
+    "templates/extras/validation/zod"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -45,7 +45,7 @@ async function install_zod(projectDir: string): Promise<void> {
 async function install_yup(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/validation/yup"
+    "templates/extras/validation/yup"
   );
   await copy_template_files(templateDir, projectDir);
 

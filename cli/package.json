@@ -1,18 +1,21 @@
 {
     "name": "deploy-bbc",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "CLI to bootstrap production-ready backends with Bun (Best Backend Code)",
     "type": "module",
     "bin": {
         "deploy-bbc": "./dist/index.js"
     },
     "files": [
-        "dist",
-        "templates"
+        "dist"
     ],
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "scripts": {
         "dev": "bun --watch src/index.ts",
-        "build": "bun build src/index.ts --outdir dist --target node",
+        "build": "bun build src/index.ts --outdir dist --target node && cp -r src/templates dist/templates",
+        "prepublishOnly": "bun run build",
         "start": "node dist/index.js",
         "type-check": "tsc --noEmit"
     },
@@ -24,8 +27,16 @@
         "boilerplate",
         "api"
     ],
-    "author": "Your Name",
+    "author": "Aritra Sarkar <aritrasarkar2002@gmail.com>",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/aritra69/deploy-bbc.git"
+    },
+    "homepage": "https://github.com/aritra69/deploy-bbc#readme",
+    "bugs": {
+        "url": "https://github.com/aritra69/deploy-bbc/issues"
+    },
     "dependencies": {
         "@clack/prompts": "^0.7.0",
         "chalk": "^5.3.0",

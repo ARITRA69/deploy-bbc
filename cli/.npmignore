@@ -1,0 +1,30 @@
+# Source files (we only ship dist/)
+src/
+!src/templates/
+
+# Config files
+tsconfig.json
+.eslintrc*
+.prettierrc*
+
+# Tests
+*.test.ts
+*.spec.ts
+__tests__/
+tests/
+
+# Development
+node_modules/
+.DS_Store
+*.log
+.env*
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

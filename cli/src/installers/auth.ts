@@ -34,7 +34,7 @@ export async function auth_installer(
 }
 
 async function install_jwt(projectDir: string): Promise<void> {
-  const templateDir = path.resolve(__dirname, "../templates/extras/auth/jwt");
+  const templateDir = path.resolve(__dirname, "templates/extras/auth/jwt");
   await copy_template_files(templateDir, projectDir);
 
   await add_package_dependency(projectDir, {
@@ -58,7 +58,7 @@ async function install_jwt(projectDir: string): Promise<void> {
 }
 
 async function install_oauth(projectDir: string): Promise<void> {
-  const templateDir = path.resolve(__dirname, "../templates/extras/auth/oauth");
+  const templateDir = path.resolve(__dirname, "templates/extras/auth/oauth");
   await copy_template_files(templateDir, projectDir);
 
   await add_package_dependency(projectDir, {
@@ -83,7 +83,7 @@ async function install_oauth(projectDir: string): Promise<void> {
 async function install_session(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/auth/session"
+    "templates/extras/auth/session"
   );
   await copy_template_files(templateDir, projectDir);
 

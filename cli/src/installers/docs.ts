@@ -33,7 +33,7 @@ export async function docs_installer(
 async function install_swagger(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/docs/swagger"
+    "templates/extras/docs/swagger"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -45,7 +45,7 @@ async function install_swagger(projectDir: string): Promise<void> {
 async function install_scalar(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/docs/scalar"
+    "templates/extras/docs/scalar"
   );
   await copy_template_files(templateDir, projectDir);
 

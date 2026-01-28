@@ -33,7 +33,7 @@ export async function realtime_installer(
 async function install_socketio(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/realtime/socketio"
+    "templates/extras/realtime/socketio"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -53,7 +53,7 @@ async function install_socketio(projectDir: string): Promise<void> {
 async function install_sse(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/realtime/sse"
+    "templates/extras/realtime/sse"
   );
   await copy_template_files(templateDir, projectDir);
 

@@ -37,7 +37,7 @@ export async function cloud_installer(
 }
 
 async function install_aws(projectDir: string): Promise<void> {
-  const templateDir = path.resolve(__dirname, "../templates/extras/cloud/aws");
+  const templateDir = path.resolve(__dirname, "templates/extras/cloud/aws");
   await copy_template_files(templateDir, projectDir);
 
   await add_package_dependency(projectDir, {
@@ -53,7 +53,7 @@ async function install_aws(projectDir: string): Promise<void> {
 }
 
 async function install_gcp(projectDir: string): Promise<void> {
-  const templateDir = path.resolve(__dirname, "../templates/extras/cloud/gcp");
+  const templateDir = path.resolve(__dirname, "templates/extras/cloud/gcp");
   await copy_template_files(templateDir, projectDir);
 
   await add_package_dependency(projectDir, {
@@ -69,7 +69,7 @@ async function install_gcp(projectDir: string): Promise<void> {
 async function install_azure(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/cloud/azure"
+    "templates/extras/cloud/azure"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -86,7 +86,7 @@ async function install_azure(projectDir: string): Promise<void> {
 async function install_cloudflare_r2(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/cloud/cloudflare-r2"
+    "templates/extras/cloud/cloudflare-r2"
   );
   await copy_template_files(templateDir, projectDir);
 

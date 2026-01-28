@@ -33,7 +33,7 @@ export async function queue_installer(
 async function install_bullmq(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/queue/bullmq"
+    "templates/extras/queue/bullmq"
   );
   await copy_template_files(templateDir, projectDir);
 
@@ -50,7 +50,7 @@ async function install_bullmq(projectDir: string): Promise<void> {
 async function install_inngest(projectDir: string): Promise<void> {
   const templateDir = path.resolve(
     __dirname,
-    "../templates/extras/queue/inngest"
+    "templates/extras/queue/inngest"
   );
   await copy_template_files(templateDir, projectDir);
 
