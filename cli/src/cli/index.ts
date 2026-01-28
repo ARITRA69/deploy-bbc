@@ -100,12 +100,17 @@ export const run_cli = async (): Promise<CliResults> => {
       projectName: () =>
         p.text({
           message: "What will your project be called?",
-          placeholder: "my-awesome-api",
+          placeholder: "my-awesome-api (or . for current directory)",
           defaultValue: cliProvidedName || "my-backend",
           validate: (value) => {
             if (!value) return "Please enter a project name";
-            if (!/^[a-z0-9-_]+$/i.test(value))
-              return "Only letters, numbers, dashes and underscores";
+            // Allow '.' for current directory or paths
+            if (value === "." || value.startsWith("./") || value.startsWith("../") || value.startsWith("~/")) {
+              return; // Valid path
+            }
+            // Otherwise check for valid name format
+            if (!/^[a-z0-9-_/]+$/i.test(value))
+              return "Only letters, numbers, dashes, underscores, and slashes";
           },
         }),
 

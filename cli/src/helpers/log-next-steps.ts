@@ -14,22 +14,31 @@ export function log_next_steps(
   options: InstallerOptions,
   _cliResults: CliResults
 ): void {
-  const { appName, packages } = options;
+  const { appName, packages, projectDir } = options;
+
+  // Check if project was created in current directory
+  const isCurrentDirectory = projectDir === process.cwd();
 
   console.log("\n" + chalk.bold.green("✨ Project created successfully!"));
   console.log("\n" + chalk.bold("Next steps:"));
   console.log();
 
-  // Step 1: Navigate to project
-  console.log(chalk.cyan("1.") + " Navigate to your project:");
-  console.log(`   ${chalk.gray("cd")} ${appName}`);
-  console.log();
+  let stepNumber = 1;
 
-  // Step 2: Environment variables
-  console.log(chalk.cyan("2.") + " Set up environment variables:");
+  // Step 1: Navigate to project (skip if current directory)
+  if (!isCurrentDirectory) {
+    console.log(chalk.cyan(`${stepNumber}.`) + " Navigate to your project:");
+    console.log(`   ${chalk.gray("cd")} ${appName}`);
+    console.log();
+    stepNumber++;
+  }
+
+  // Step: Environment variables
+  console.log(chalk.cyan(`${stepNumber}.`) + " Set up environment variables:");
   console.log(`   ${chalk.gray("cp")} .env.example .env`);
   console.log(`   ${chalk.gray("# Edit .env with your configuration")}`);
   console.log();
+  stepNumber++;
 
   // Step 3: Docker (if database or redis selected)
   const hasDocker =
@@ -39,9 +48,10 @@ export function log_next_steps(
     packages.includes(AvailablePackages.redis);
 
   if (hasDocker) {
-    console.log(chalk.cyan("3.") + " Start Docker services:");
+    console.log(chalk.cyan(`${stepNumber}.`) + " Start Docker services:");
     console.log(`   ${chalk.gray("docker-compose up -d")}`);
     console.log();
+    stepNumber++;
   }
 
   // Step 4: Database migrations (if postgres or mysql)
@@ -50,21 +60,14 @@ export function log_next_steps(
     packages.includes(AvailablePackages.mysql);
 
   if (needsMigration) {
-    const stepNum = hasDocker ? "4" : "3";
-    console.log(chalk.cyan(`${stepNum}.`) + " Run database migrations:");
+    console.log(chalk.cyan(`${stepNumber}.`) + " Run database migrations:");
     console.log(`   ${chalk.gray("bun run db:migrate")}`);
     console.log();
+    stepNumber++;
   }
 
-  // Step 5: Start development server
-  const lastStepNum = needsMigration
-    ? hasDocker
-      ? "5"
-      : "4"
-    : hasDocker
-    ? "4"
-    : "3";
-  console.log(chalk.cyan(`${lastStepNum}.`) + " Start the development server:");
+  // Step: Start development server
+  console.log(chalk.cyan(`${stepNumber}.`) + " Start the development server:");
   console.log(`   ${chalk.gray("bun run dev")}`);
   console.log();
 
