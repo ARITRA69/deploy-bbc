@@ -1,6 +1,6 @@
 {
     "name": "deploy-bbc",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "CLI to bootstrap production-ready backends with Bun (Best Backend Code)",
     "workspaces": [
         "cli"
