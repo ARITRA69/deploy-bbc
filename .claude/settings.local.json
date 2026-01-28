@@ -19,7 +19,8 @@
       "Bash(__NEW_LINE_9f83ff59159ef844__ echo \"\")",
       "Bash(__NEW_LINE_618ccd8d4d53005b__ echo \"\")",
       "WebSearch",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(npm publish:*)"
     ]
   }
 }
