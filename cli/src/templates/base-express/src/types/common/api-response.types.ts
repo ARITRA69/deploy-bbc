@@ -2,29 +2,24 @@
  * Common API response types
  */
 
-export interface ApiResponse<T = unknown> {
-  success: boolean;
+
+export type TApiSuccess<T =unknown> = {
   data?: T;
-  error?: string;
-  message?: string;
+  message: string;
+  pagination?: TPaginationResponse
 }
 
-export interface PaginatedResponse<T> extends ApiResponse<T[]> {
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
-
-export interface ValidationError {
-  field: string;
+export type TApiError = {
+  status_code: number;
   message: string;
 }
 
-export interface ApiError {
-  success: false;
-  error: string;
-  details?: ValidationError[];
+export type TApiResponse<T = unknown> = TApiSuccess<T> | TApiError
+
+export type TPaginationResponse = {
+  page: number;
+  limit: number;
+  total_pages: number;
+  total_count: number;
 }
+

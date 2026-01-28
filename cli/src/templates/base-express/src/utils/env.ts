@@ -1,5 +1,12 @@
-import { config as dotenvConfig } from "dotenv";
+import dotenv from 'dotenv'
+import path from 'path'
 
-export function load_env(): void {
-  dotenvConfig();
+dotenv.config({path: path.resolve(__dirname, '../../.env')})
+
+export type TEnv = {
+  port: number
+}
+
+export const env: TEnv = {
+  port: parseInt(process.env.PORT || '8000');
 }
