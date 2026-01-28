@@ -23,7 +23,9 @@
       "Bash(npm publish:*)",
       "Bash(tree:*)",
       "Bash(npm view:*)",
-      "Bash(npm pack:*)"
+      "Bash(npm pack:*)",
+      "Bash(test:*)",
+      "Bash(ls:*)"
     ]
   }
 }

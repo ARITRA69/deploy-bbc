@@ -28,6 +28,8 @@ export async function create_project(cliResults: CliResults): Promise<void> {
       framework: cliResults.framework,
       packages: cliResults.packages,
       noInstall: cliResults.flags.noInstall,
+      dockerizeDb: cliResults.flags.dockerizeDb || false,
+      dockerizeBackend: cliResults.flags.dockerizeBackend || false,
     };
 
     // Step 3: Scaffold base project structure
@@ -40,9 +42,15 @@ export async function create_project(cliResults: CliResults): Promise<void> {
     await run_installers(installerMap, installerOptions);
 
     // Step 5: Generate Docker files
-    render_title("Generating Docker configuration");
-    await generate_dockerfile(installerOptions);
-    await generate_docker_compose(installerOptions);
+    if (cliResults.flags.dockerizeDb || cliResults.flags.dockerizeBackend) {
+      render_title("Generating Docker configuration");
+      if (cliResults.flags.dockerizeBackend) {
+        await generate_dockerfile(installerOptions);
+      }
+      if (cliResults.flags.dockerizeDb || cliResults.flags.dockerizeBackend) {
+        await generate_docker_compose(installerOptions);
+      }
+    }
 
     // Step 6: Install dependencies (unless --noInstall flag)
     if (!cliResults.flags.noInstall) {

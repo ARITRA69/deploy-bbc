@@ -11,16 +11,17 @@ import { type InstallerOptions, AvailablePackages } from "../types/index.js";
 export async function generate_docker_compose(
   options: InstallerOptions
 ): Promise<void> {
-  const { projectDir, packages, appName } = options;
+  const { projectDir, packages, appName, dockerizeDb, dockerizeBackend } = options;
 
   // Check which services are needed
-  const hasPostgres = packages.includes(AvailablePackages.postgres);
-  const hasMysql = packages.includes(AvailablePackages.mysql);
-  const hasMongodb = packages.includes(AvailablePackages.mongodb);
-  const hasRedis = packages.includes(AvailablePackages.redis);
+  const hasPostgres = dockerizeDb && packages.includes(AvailablePackages.postgres);
+  const hasMysql = dockerizeDb && packages.includes(AvailablePackages.mysql);
+  const hasSqlite = dockerizeDb && packages.includes(AvailablePackages.sqlite);
+  const hasMongodb = dockerizeDb && packages.includes(AvailablePackages.mongodb);
+  const hasRedis = dockerizeDb && packages.includes(AvailablePackages.redis);
 
   // Only generate docker-compose if we have any services to include
-  if (!hasPostgres && !hasMysql && !hasMongodb && !hasRedis) {
+  if (!dockerizeBackend && !hasPostgres && !hasMysql && !hasSqlite && !hasMongodb && !hasRedis) {
     return;
   }
 
@@ -29,8 +30,9 @@ export async function generate_docker_compose(
 services:
 `;
 
-  // Add app service
-  composeContent += `  app:
+  // Add app service (only if dockerizeBackend is true)
+  if (dockerizeBackend) {
+    composeContent += `  app:
     build: .
     ports:
       - "8000:8000"
@@ -40,19 +42,27 @@ services:
       - .env
 `;
 
-  // Add depends_on for databases
-  const dependencies: string[] = [];
-  if (hasPostgres) dependencies.push("postgres");
-  if (hasMysql) dependencies.push("mysql");
-  if (hasMongodb) dependencies.push("mongodb");
-  if (hasRedis) dependencies.push("redis");
-
-  if (dependencies.length > 0) {
-    composeContent += `    depends_on:
+    // Add SQLite volume if needed
+    if (hasSqlite) {
+      composeContent += `    volumes:
+      - ./data:/app/data
 `;
-    dependencies.forEach((dep) => {
-      composeContent += `      - ${dep}\n`;
-    });
+    }
+
+    // Add depends_on for databases
+    const dependencies: string[] = [];
+    if (hasPostgres) dependencies.push("postgres");
+    if (hasMysql) dependencies.push("mysql");
+    if (hasMongodb) dependencies.push("mongodb");
+    if (hasRedis) dependencies.push("redis");
+
+    if (dependencies.length > 0) {
+      composeContent += `    depends_on:
+`;
+      dependencies.forEach((dep) => {
+        composeContent += `      - ${dep}\n`;
+      });
+    }
   }
 
   // Add PostgreSQL service

@@ -39,7 +39,7 @@ It ships with production-ready defaults, optional integrations, Docker support, 
 - 🚀 **Production-ready templates** with best practices
 - 🔌 **30+ integrations** (databases, auth, AI, cloud, infra)
 - 🛡️ **Fully type-safe** with strict TypeScript
-- 🐳 **Dockerfile and docker-compose** included
+- 🐳 **Optional Docker support** for databases and/or backend
 - 💎 **Strong developer experience** with testing and docs
 - ⚙️ **Zero-config defaults** that work out of the box
 
@@ -78,8 +78,9 @@ bunx deploy-bbc my-backend
   <img height="40" src="https://cdn.brandfetch.io/idwlYcQpHB/theme/dark/symbol.svg?c=1bxid64Mup7aczewSAYMX&t=1668515608635" alt="Redis" />
 </p>
 
-- **PostgreSQL** with Drizzle ORM
-- **MySQL** with Drizzle ORM
+- **PostgreSQL** with native postgres driver
+- **MySQL** with mysql2 driver (Bun-optimized)
+- **SQLite** with bun:sqlite (built-in, zero dependencies)
 - **MongoDB** with Mongoose
 - **Redis** for caching and queues
 
@@ -179,11 +180,55 @@ src/
 
 ## Docker Support
 
+The CLI provides flexible Docker configuration options:
+
+### Options
+
+During setup, you'll be asked:
+
+1. **Dockerize databases?** - Generates docker-compose services for:
+   - PostgreSQL
+   - MySQL
+   - MongoDB
+   - Redis
+
+2. **Dockerize the backend?** - Creates:
+   - Multi-stage Dockerfile optimized for Bun
+   - App service in docker-compose.yml
+
+### Usage
+
+If you selected to dockerize your databases:
+
 ```bash
-docker-compose up
+# Start only databases
+docker-compose up postgres redis -d
+
+# Run your app locally
+bun run dev
 ```
 
-Dockerfile and docker-compose are included by default.
+If you dockerized both databases and backend:
+
+```bash
+# Start everything
+docker-compose up
+
+# Or in detached mode
+docker-compose up -d
+```
+
+### SQLite with Docker
+
+When using SQLite with a dockerized backend, your database file is automatically mounted as a volume to persist data between container restarts.
+
+### CLI Flags
+
+You can also use CLI flags for non-interactive setup:
+
+```bash
+npx deploy-bbc my-api --dockerizeDb --dockerizeBackend
+```
 
 ---
 

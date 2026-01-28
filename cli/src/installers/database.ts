@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Database installer - handles postgres, mysql, mongodb, and redis setup.
+ * Database installer - handles postgres, mysql, sqlite, mongodb, and redis setup.
  * Copies template files and adds necessary dependencies.
  *
  * @param options - Installer options with selected packages
@@ -27,6 +27,9 @@ export async function database_installer(
         break;
       case AvailablePackages.mysql:
         await install_mysql(projectDir);
+        break;
+      case AvailablePackages.sqlite:
+        await install_sqlite(projectDir);
         break;
       case AvailablePackages.mongodb:
         await install_mongodb(projectDir);
@@ -49,25 +52,13 @@ async function install_postgres(projectDir: string): Promise<void> {
   // Add dependencies
   await add_package_dependency(projectDir, {
     postgres: DEPENDENCY_VERSION_MAP["postgres"],
-    "drizzle-orm": DEPENDENCY_VERSION_MAP["drizzle-orm"],
   });
-
-  await add_package_dependency(
-    projectDir,
-    {},
-    {
-      "drizzle-kit": DEPENDENCY_VERSION_MAP["drizzle-kit"],
-    }
-  );
 
   // Append to .env.example
   await append_env_example(
     projectDir,
     "\n# PostgreSQL Configuration\nDATABASE_URL=postgresql://user:password@localhost:5432/dbname\n"
   );
-
-  // Add db scripts to package.json
-  await add_db_scripts(projectDir, "postgres");
 }
 
 async function install_mysql(projectDir: string): Promise<void> {
@@ -81,25 +72,40 @@ async function install_mysql(projectDir: string): Promise<void> {
   // Add dependencies
   await add_package_dependency(projectDir, {
     mysql2: DEPENDENCY_VERSION_MAP["mysql2"],
-    "drizzle-orm": DEPENDENCY_VERSION_MAP["drizzle-orm"],
   });
-
-  await add_package_dependency(
-    projectDir,
-    {},
-    {
-      "drizzle-kit": DEPENDENCY_VERSION_MAP["drizzle-kit"],
-    }
-  );
 
   // Append to .env.example
   await append_env_example(
     projectDir,
     "\n# MySQL Configuration\nDATABASE_URL=mysql://user:password@localhost:3306/dbname\n"
   );
+}
 
-  // Add db scripts to package.json
-  await add_db_scripts(projectDir, "mysql");
+async function install_sqlite(projectDir: string): Promise<void> {
+  // Copy template files
+  const templateDir = path.resolve(
+    __dirname,
+    "templates/extras/database/sqlite"
+  );
+  await copy_template_files(templateDir, projectDir);
+
+  // No dependencies needed - bun:sqlite is built-in to Bun
+
+  // Append to .env.example
+  await append_env_example(
+    projectDir,
+    "\n# SQLite Configuration\nDATABASE_PATH=./data/app.db\n"
+  );
+
+  // Create data directory for SQLite database
+  await fs.ensureDir(path.join(projectDir, "data"));
+
+  // Add data directory to .gitignore
+  const gitignorePath = path.join(projectDir, ".gitignore");
+  const gitignoreContent = await fs.readFile(gitignorePath, "utf-8");
+  if (!gitignoreContent.includes("data/")) {
+    await fs.appendFile(gitignorePath, "\n# SQLite database\ndata/\n");
+  }
 }
 
 async function install_mongodb(projectDir: string): Promise<void> {
@@ -165,7 +171,7 @@ async function copy_template_files(
     });
   }
 
-  // Copy root config files (e.g., drizzle.config.ts)
+  // Copy root config files if any exist
   const templateFiles = await fs.readdir(templateDir);
   for (const file of templateFiles) {
     if (file !== "src" && (file.endsWith(".ts") || file.endsWith(".json"))) {
@@ -189,24 +195,4 @@ async function append_env_example(
 ): Promise<void> {
   const envPath = path.join(projectDir, ".env.example");
   await fs.appendFile(envPath, content);
-}
-
-/**
- * Adds database migration scripts to package.json
- */
-async function add_db_scripts(
-  projectDir: string,
-  dbType: "postgres" | "mysql"
-): Promise<void> {
-  const packageJsonPath = path.join(projectDir, "package.json");
-  const packageJson = await fs.readJson(packageJsonPath);
-
-  packageJson.scripts = {
-    ...packageJson.scripts,
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio",
-  };
-
-  await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
 }

@@ -4,7 +4,7 @@ import type { User, CreateUserInput, UpdateUserInput } from "../types/models/use
  * User model
  *
  * This is a simple in-memory implementation.
- * Replace with your database ORM (Drizzle, Prisma, etc.) in production.
+ * Replace with your actual database implementation in production.
  */
 
 // In-memory storage (for demonstration)

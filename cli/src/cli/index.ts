@@ -27,6 +27,7 @@ export const run_cli = async (): Promise<CliResults> => {
     // Database options
     .option("--postgres", "Include PostgreSQL")
     .option("--mysql", "Include MySQL")
+    .option("--sqlite", "Include SQLite")
     .option("--mongodb", "Include MongoDB")
     .option("--redis", "Include Redis")
     // Auth options
@@ -63,6 +64,9 @@ export const run_cli = async (): Promise<CliResults> => {
     // Validation options
     .option("--zod", "Include Zod validation")
     .option("--yup", "Include Yup validation")
+    // Docker options
+    .option("--dockerizeDb", "Dockerize databases (PostgreSQL, MySQL, Redis, MongoDB)")
+    .option("--dockerizeBackend", "Dockerize the backend application")
     .parse(process.argv);
 
   const cliProvidedName = program.args[0];
@@ -84,11 +88,11 @@ ${gray}/                                                                    \\${
 ${gray}|${reset}  ${blue}█▀▀▄ █▀▀ █▀▀█ █    █▀▀█ █  █    █▀▀▄ █▀▀▄ █▀▀${reset}                     ${gray}|${reset}
 ${gray}|${reset}  ${blue}█  █ █▀▀ █  █ █    █  █ █▄▄█    █▀▀▄ █▀▀▄ █${reset}                       ${gray}|${reset}
 ${gray}|${reset}  ${blue}█▄▄▀ ▀▀▀ █▀▀▀ ▀▀▀  ▀▀▀▀ ▄▄▄█    █▄▄▀ █▄▄▀ ▀▀▀${reset}                     ${gray}|${reset}
-${gray}|${reset}                                                                    ${gray}|${reset}
-${gray}|${reset}  🚀 ${blue}Best Backend Code${reset}                                           ${gray}|${reset}
-${gray}|${reset}                                                                    ${gray}|${reset}
-${gray}|${reset}  ${gray}Bootstrap production-ready backends with Bun & TypeScript${reset}      ${gray}|${reset}
-${gray}|${reset}  ${gray}[ Bun ] ---------- [ TypeScript ] ---------- [ Docker ]${reset}         ${gray}|${reset}
+${gray}|${reset}                                                                                   ${gray}|${reset}
+${gray}|${reset}  🚀 ${blue}Best Backend Code${reset}                                              ${gray}|${reset}
+${gray}|${reset}                                                                                   ${gray}|${reset}
+${gray}|${reset}  ${gray}Backend so good, it hurts${reset}                                         ${gray}|${reset}
+${gray}|${reset}  ${gray}[ Bun ] ---------- [ TypeScript ] ---------- [ Docker ]${reset}           ${gray}|${reset}
 ${gray}\\____________________________________________________________________/${reset}
   `;
 
@@ -106,17 +110,38 @@ ${gray}\\____________________________________________________________________/${
       projectName: () =>
         p.text({
           message: "What will your project be called?",
-          placeholder: "my-awesome-api (or . for current directory)",
+          placeholder: "my-awesome-api (use '.' for current dir if empty)",
           defaultValue: cliProvidedName || "my-backend",
           validate: (value) => {
             if (!value) return "Please enter a project name";
-            // Allow '.' for current directory or paths
-            if (value === "." || value.startsWith("./") || value.startsWith("../") || value.startsWith("~/")) {
-              return; // Valid path
+
+            // Check for valid name format first
+            if (!/^[a-z0-9-_/.]+$/i.test(value)) {
+              return "Only letters, numbers, dashes, underscores, and slashes allowed";
             }
-            // Otherwise check for valid name format
-            if (!/^[a-z0-9-_/]+$/i.test(value))
-              return "Only letters, numbers, dashes, underscores, and slashes";
+
+            // Special handling for "." (current directory)
+            if (value === ".") {
+              const fs = require("fs");
+              const path = require("path");
+              const cwd = process.cwd();
+
+              // Check for conflicting files/folders
+              const conflictingPaths = ["src", "package.json"];
+              const conflicts = [];
+
+              for (const pathToCheck of conflictingPaths) {
+                if (fs.existsSync(path.join(cwd, pathToCheck))) {
+                  conflicts.push(pathToCheck);
+                }
+              }
+
+              if (conflicts.length > 0) {
+                return `Current directory already contains: ${conflicts.join(", ")}. Please use a new directory name or run from an empty directory.`;
+              }
+            }
+
+            return; // Valid
           },
         }),
 
@@ -150,12 +175,17 @@ ${gray}\\____________________________________________________________________/${
             {
               value: AvailablePackages.postgres,
               label: "PostgreSQL",
-              hint: "Dockerized • Drizzle ORM",
+              hint: "Dockerized • Native postgres driver",
             },
             {
               value: AvailablePackages.mysql,
               label: "MySQL",
-              hint: "Dockerized • Drizzle ORM",
+              hint: "Dockerized • mysql2 driver",
+            },
+            {
+              value: AvailablePackages.sqlite,
+              label: "SQLite",
+              hint: "File-based • bun:sqlite (built-in)",
             },
             {
               value: AvailablePackages.mongodb,
@@ -357,6 +387,30 @@ ${gray}\\____________________________________________________________________/${
           initialValue: AvailablePackages.zod,
         }),
 
+      // ──────────────────────────────────────────
+      // 🐳 DOCKER
+      // ──────────────────────────────────────────
+      ...add_cli_header("🐳 DOCKER"),
+
+      dockerizeDb: ({ results }) => {
+        const hasDatabases =
+          results.databases &&
+          results.databases.length > 0;
+
+        if (!hasDatabases) return Promise.resolve(false);
+
+        return p.confirm({
+          message: "Dockerize databases? (PostgreSQL, MySQL, Redis, MongoDB)",
+          initialValue: true,
+        });
+      },
+
+      dockerizeBackend: () =>
+        p.confirm({
+          message: "Dockerize the backend application?",
+          initialValue: true,
+        }),
+
       installDeps: () =>
         p.confirm({
           message: "Install dependencies?",
@@ -400,6 +454,8 @@ ${gray}\\____________________________________________________________________/${
       ...defaultOptions,
       noInstall: !project.installDeps,
       noGit: !project.initGit,
+      dockerizeDb: project.dockerizeDb as boolean,
+      dockerizeBackend: project.dockerizeBackend as boolean,
     },
   };
 };
@@ -429,6 +485,7 @@ function build_from_flags(
   // Add packages based on flags
   if (flags.postgres) packages.push(AvailablePackages.postgres);
   if (flags.mysql) packages.push(AvailablePackages.mysql);
+  if (flags.sqlite) packages.push(AvailablePackages.sqlite);
   if (flags.mongodb) packages.push(AvailablePackages.mongodb);
   if (flags.redis) packages.push(AvailablePackages.redis);
   if (flags.jwt) packages.push(AvailablePackages.jwt);

@@ -52,8 +52,12 @@ export async function scaffold_project(
       if (conflicts.length > 0) {
         spinner.fail("Cannot scaffold in current directory");
         throw new Error(
-          `The following files/folders already exist: ${conflicts.join(", ")}\n` +
-          "Please use an empty directory or choose a different location."
+          `Current directory already contains: ${conflicts.join(", ")}\n\n` +
+          "To fix this:\n" +
+          "  1. Create a new directory: mkdir my-project && cd my-project\n" +
+          "  2. Or run from a parent directory and specify a new project name\n" +
+          "  3. Or use an empty directory\n\n" +
+          "Example: npx deploy-bbc (then enter a new project name like 'my-api')"
         );
       }
     }

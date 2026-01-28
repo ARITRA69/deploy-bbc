@@ -14,11 +14,6 @@ export const DEPENDENCY_VERSION_MAP: Record<string, string> = {
   "mongoose": "^8.1.0",
   "redis": "^4.6.12",
 
-  // ORM & Query Builders
-  "drizzle-orm": "^0.29.3",
-  "drizzle-kit": "^0.20.10",
-  "kysely": "^0.27.2",
-
   // Authentication
   "jsonwebtoken": "^9.0.2",
   "@types/jsonwebtoken": "^9.0.5",

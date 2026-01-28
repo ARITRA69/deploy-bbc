@@ -3,10 +3,15 @@ export interface CliFlags {
   noInstall: boolean;
   default: boolean;
   CI: boolean;
-  
+
+  // Docker flags
+  dockerizeDb?: boolean;
+  dockerizeBackend?: boolean;
+
   // Database flags
   postgres?: boolean;
   mysql?: boolean;
+  sqlite?: boolean;
   mongodb?: boolean;
   redis?: boolean;
   
@@ -65,6 +70,7 @@ export enum AvailablePackages {
   // Core
   postgres = "postgres",
   mysql = "mysql",
+  sqlite = "sqlite",
   mongodb = "mongodb",
   redis = "redis",
   jwt = "jwt",
@@ -114,6 +120,8 @@ export interface InstallerOptions {
   appName: string;
   framework: Framework;
   noInstall: boolean;
+  dockerizeDb: boolean;
+  dockerizeBackend: boolean;
 }
 
 export type Installer = (opts: InstallerOptions) => Promise<void>;
