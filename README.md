@@ -1,8 +1,6 @@
 # deploy-bbc
 
-<p align="center">
-  <b>Best Backend Code</b> — A powerful CLI to bootstrap production-ready backend applications with Bun
-</p>
+Image.png
 
 <p align="center">
   <img src="https://img.shields.io/npm/v/deploy-bbc" alt="npm version" />

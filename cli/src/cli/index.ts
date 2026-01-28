@@ -74,19 +74,25 @@ export const run_cli = async (): Promise<CliResults> => {
   }
 
   // Interactive Mode
+  const blue = "\x1b[38;5;75m";   // Copilot Blue
+  const gray = "\x1b[90m";        // Frame Gray
+  const reset = "\x1b[0m";
+
   const intro = `
-╔═══════════════════════════════════════════════╗
-║                                               ║
-║     🚀  deploy-bbc                            ║
-║         (Best Backend Code)                   ║
-║                                               ║
-║     Bootstrap a production-ready backend      ║
-║     with Bun, TypeScript & Docker             ║
-║                                               ║
-╚═══════════════════════════════════════════════╝
+ ${gray}____________________________________________________________________${reset}
+${gray}/                                                                    \\${reset}
+${gray}|${reset}  ${blue}█▀▀▄ █▀▀ █▀▀█ █    █▀▀█ █  █    █▀▀▄ █▀▀▄ █▀▀${reset}                     ${gray}|${reset}
+${gray}|${reset}  ${blue}█  █ █▀▀ █  █ █    █  █ █▄▄█    █▀▀▄ █▀▀▄ █${reset}                       ${gray}|${reset}
+${gray}|${reset}  ${blue}█▄▄▀ ▀▀▀ █▀▀▀ ▀▀▀  ▀▀▀▀ ▄▄▄█    █▄▄▀ █▄▄▀ ▀▀▀${reset}                     ${gray}|${reset}
+${gray}|${reset}                                                                    ${gray}|${reset}
+${gray}|${reset}  🚀 ${blue}Best Backend Code${reset}                                           ${gray}|${reset}
+${gray}|${reset}                                                                    ${gray}|${reset}
+${gray}|${reset}  ${gray}Bootstrap production-ready backends with Bun & TypeScript${reset}      ${gray}|${reset}
+${gray}|${reset}  ${gray}[ Bun ] ---------- [ TypeScript ] ---------- [ Docker ]${reset}         ${gray}|${reset}
+${gray}\\____________________________________________________________________/${reset}
   `;
 
-  console.log(chalk.cyan(intro));
+  console.log(intro);
 
   p.intro(chalk.bgCyan(chalk.black(" deploy-bbc ")));
 
