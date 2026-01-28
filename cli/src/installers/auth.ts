@@ -76,7 +76,7 @@ async function install_oauth(projectDir: string): Promise<void> {
 
   await append_env_example(
     projectDir,
-    "\n# OAuth Configuration\nOAUTH_CLIENT_ID=your-client-id\nOAUTH_CLIENT_SECRET=your-client-secret\nOAUTH_CALLBACK_URL=http://localhost:3000/auth/callback\n"
+    "\n# OAuth Configuration\nOAUTH_CLIENT_ID=your-client-id\nOAUTH_CLIENT_SECRET=your-client-secret\nOAUTH_CALLBACK_URL=http://localhost:8000/auth/callback\n"
   );
 }
 

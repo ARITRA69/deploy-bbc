@@ -33,7 +33,7 @@ services:
   composeContent += `  app:
     build: .
     ports:
-      - "3000:3000"
+      - "8000:8000"
     environment:
       - NODE_ENV=production
     env_file:

@@ -1,0 +1,38 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Aritra",
+    "Sarkar",
+    "aritra",
+    "bunx",
+    "hono",
+    "drizzle",
+    "bullmq",
+    "inngest",
+    "upstash",
+    "logtail",
+    "resend",
+    "sendgrid",
+    "nodemailer",
+    "socketio",
+    "vitest",
+    "postgres",
+    "mongodb",
+    "redis",
+    "Cloudflare",
+    "openai",
+    "anthropic",
+    "gemini",
+    "vercel",
+    "clack",
+    "natemoo"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "build",
+    "*.min.js",
+    ".git"
+  ]
+}

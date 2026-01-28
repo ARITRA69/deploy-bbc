@@ -34,7 +34,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=build /app .
 
 # Expose port
-EXPOSE 3000
+EXPOSE 8000
 
 # Run the application
 CMD ["bun", "run", "src/index.ts"]

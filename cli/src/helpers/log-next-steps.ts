@@ -77,7 +77,7 @@ export function log_next_steps(
     packages.includes(AvailablePackages.scalar)
   ) {
     console.log(
-      chalk.bold("📚 API Documentation:") + " http://localhost:3000/docs"
+      chalk.bold("📚 API Documentation:") + " http://localhost:8000/docs"
     );
     console.log();
   }
