@@ -21,7 +21,9 @@
       "WebSearch",
       "WebFetch(domain:github.com)",
       "Bash(npm publish:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(npm view:*)",
+      "Bash(npm pack:*)"
     ]
   }
 }
