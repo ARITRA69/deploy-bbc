@@ -6,8 +6,8 @@ import { router } from "./routes/index.js";
 /**
  * Simple router matcher for Bun native server
  */
-function match_route(pathname: string, method: string): Response | null {
-  return router(pathname, method);
+async function match_route(pathname: string, method: string, req: Request): Promise<Response | null> {
+  return await router(pathname, method, req);
 }
 
 const server = Bun.serve({
@@ -28,7 +28,7 @@ const server = Bun.serve({
       }
 
       // Match routes
-      const response = match_route(url.pathname, req.method);
+      const response = await match_route(url.pathname, req.method, req);
       if (response) {
         logger(req, response, Date.now() - start);
         return response;

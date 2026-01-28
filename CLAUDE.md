@@ -105,18 +105,84 @@ This document outlines the coding conventions and guidelines for the `create-bac
 
 ---
 
-## 📦 Type & Interface Naming
+## 📦 Type Naming & Usage
 
-### Use `PascalCase` for types, interfaces, enums, and classes
+### Use `PascalCase` for types, enums, and classes
 
 ```typescript
-✅ interface CliResults { }
+✅ type CliResults = { }
 ✅ type InstallerOptions = { }
 ✅ enum AvailablePackages { }
 ✅ class ProjectScaffold { }
 
-❌ interface cli_results { }
+❌ type cli_results = { }
 ❌ type installer_options = { }
+```
+
+### ⚠️ ALWAYS use `type` instead of `interface`
+
+```typescript
+✅ type CliResults = {
+  appName: string;
+  flags: {
+    noGit: boolean;
+    noInstall: boolean;
+  };
+  packages: string[];
+}
+
+✅ type ScaffoldOptions = {
+  projectDir: string;
+  appName: string;
+  packages: string[];
+}
+
+❌ interface CliResults {
+  appName: string;
+  flags: {
+    noGit: boolean;
+    noInstall: boolean;
+  };
+  packages: string[];
+}
+
+❌ interface ScaffoldOptions {
+  projectDir: string;
+  appName: string;
+  packages: string[];
+}
+```
+
+**Why `type` over `interface`?**
+
+- **Consistency**: Single way to define object shapes
+- **Flexibility**: Types support unions, intersections, and mapped types more naturally
+- **Composability**: Better for complex type operations and transformations
+- **Simplicity**: One less concept to remember
+- **Modern practice**: Aligns with contemporary TypeScript patterns
+
+**Extending types:**
+
+```typescript
+✅ type BaseOptions = {
+  projectDir: string;
+  appName: string;
+}
+
+✅ type ExtendedOptions = BaseOptions & {
+  packages: string[];
+  flags: Record<string, boolean>;
+}
+
+❌ interface BaseOptions {
+  projectDir: string;
+  appName: string;
+}
+
+❌ interface ExtendedOptions extends BaseOptions {
+  packages: string[];
+  flags: Record<string, boolean>;
+}
 ```
 
 ---
@@ -163,7 +229,7 @@ import { install_dependencies } from "./install-dependencies.js";
 const DEFAULT_PROJECT_DIR = process.cwd();
 const TEMPLATE_BASE_PATH = "../templates/base";
 
-interface ScaffoldOptions {
+type ScaffoldOptions = {
   projectDir: string;
   appName: string;
   packages: string[];
@@ -247,7 +313,9 @@ To enforce these conventions, configure ESLint:
         "selector": "typeLike",
         "format": ["PascalCase"]
       }
-    ]
+    ],
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "@typescript-eslint/no-empty-interface": "error"
   }
 }
 ```
@@ -262,6 +330,7 @@ To enforce these conventions, configure ESLint:
 ❌ function createProject() { }  // camelCase function
 ❌ const project_dir = "";       // snake_case variable
 ❌ src/CreateProject.ts          // PascalCase file
+❌ interface CliResults { }      // Using interface
 ```
 
 ### ✅ Do stick to the rules
@@ -270,6 +339,7 @@ To enforce these conventions, configure ESLint:
 ✅ function create_project() { }  // snake_case function
 ✅ const projectDir = "";         // camelCase variable
 ✅ src/create-project.ts          // kebab-case file
+✅ type CliResults = { }          // Using type
 ```
 
 ---
@@ -283,9 +353,10 @@ To enforce these conventions, configure ESLint:
 | **Functions** | `snake_case` | `function create_project()` |
 | **Variables** | `camelCase` | `const projectDir` |
 | **Constants** | `SCREAMING_SNAKE_CASE` | `const MAX_RETRIES` |
-| **Types/Interfaces** | `PascalCase` | `interface CliResults` |
+| **Types** | `PascalCase` + `type` keyword | `type CliResults = { }` |
 | **Enums** | `PascalCase` | `enum AvailablePackages` |
 | **Classes** | `PascalCase` | `class ProjectScaffold` |
+| **Object Shapes** | Use `type`, NOT `interface` | `type Config = { }` |
 
 ---
 
@@ -294,10 +365,11 @@ To enforce these conventions, configure ESLint:
 When contributing to this project, please:
 
 1. ✅ Follow ALL conventions outlined in this document
-2. ✅ Run linting before committing: `bun run lint`
-3. ✅ Format code: `bun run format`
-4. ✅ Use descriptive commit messages
-5. ✅ Add JSDoc comments for exported functions
+2. ✅ Use `type` instead of `interface` for all object type definitions
+3. ✅ Run linting before committing: `bun run lint`
+4. ✅ Format code: `bun run format`
+5. ✅ Use descriptive commit messages
+6. ✅ Add JSDoc comments for exported functions
 
 ---
 
@@ -310,6 +382,7 @@ These conventions are chosen to:
 - **Reduce cognitive load** when working with multiple languages
 - **Follow industry standards** where applicable
 - **Enable better tooling support**
+- **Simplify type definitions** by using only `type` declarations
 
 ---
 
@@ -318,6 +391,7 @@ These conventions are chosen to:
 - [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
 - [TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)
 - [File Naming Conventions](https://github.com/kettanaito/naming-cheatsheet)
+- [Types vs Interfaces](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces)
 
 ---
 
