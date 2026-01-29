@@ -8,6 +8,7 @@ import { install_dependencies } from "./install-dependencies.js";
 import { init_git } from "./init-git.js";
 import { log_next_steps } from "./log-next-steps.js";
 import { render_title } from "../utils/render-title.js";
+import { add_package_scripts } from "../utils/add-package-scripts.js";
 
 /**
  * Main orchestration function for project creation.
@@ -49,6 +50,11 @@ export async function create_project(cliResults: CliResults): Promise<void> {
       }
       if (cliResults.flags.dockerizeDb || cliResults.flags.dockerizeBackend) {
         await generate_docker_compose(installerOptions);
+
+        // Add docker:dev script to package.json
+        await add_package_scripts(projectDir, {
+          "docker:dev": "docker-compose up",
+        });
       }
     }
 

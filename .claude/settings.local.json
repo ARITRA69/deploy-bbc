@@ -25,7 +25,10 @@
       "Bash(npm view:*)",
       "Bash(npm pack:*)",
       "Bash(test:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(bunx create-next-app:*)",
+      "Bash(bunx create-next-app@latest:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

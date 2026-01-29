@@ -12,7 +12,7 @@ import { AvailablePackages } from "../types/index.js";
  */
 export function log_next_steps(
   options: InstallerOptions,
-  _cliResults: CliResults
+  cliResults: CliResults
 ): void {
   const { appName, packages, projectDir } = options;
 
@@ -40,16 +40,12 @@ export function log_next_steps(
   console.log();
   stepNumber++;
 
-  // Step 3: Docker (if database or redis selected)
-  const hasDocker =
-    packages.includes(AvailablePackages.postgres) ||
-    packages.includes(AvailablePackages.mysql) ||
-    packages.includes(AvailablePackages.mongodb) ||
-    packages.includes(AvailablePackages.redis);
+  // Step 3: Docker (if dockerize is enabled)
+  const hasDocker = cliResults.flags.dockerizeDb || cliResults.flags.dockerizeBackend;
 
   if (hasDocker) {
     console.log(chalk.cyan(`${stepNumber}.`) + " Start Docker services:");
-    console.log(`   ${chalk.gray("docker-compose up -d")}`);
+    console.log(`   ${chalk.gray("bun run docker:dev")}`);
     console.log();
     stepNumber++;
   }

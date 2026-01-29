@@ -198,24 +198,38 @@ During setup, you'll be asked:
 
 ### Usage
 
-If you selected to dockerize your databases:
+When you enable Docker during setup, a convenient `docker:dev` script is automatically added to your `package.json`.
+
+#### Quick Start
 
 ```bash
-# Start only databases
+# Start all Docker services (databases and/or backend)
+bun run docker:dev
+```
+
+This script runs `docker-compose up`, starting all services defined in your `docker-compose.yml`.
+
+#### Manual Control
+
+You can also use docker-compose directly for more control:
+
+```bash
+# Start only specific services (e.g., databases only)
 docker-compose up postgres redis -d
 
 # Run your app locally
 bun run dev
 ```
 
-If you dockerized both databases and backend:
-
 ```bash
-# Start everything
-docker-compose up
-
-# Or in detached mode
+# Start everything in detached mode
 docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
 ```
 
 ### SQLite with Docker
