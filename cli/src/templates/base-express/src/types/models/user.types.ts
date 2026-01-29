@@ -2,25 +2,17 @@
  * User model types
  */
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { TDocument } from "../common/mongodb.types";
 
-export interface CreateUserInput {
+
+
+export type TUser<Tid= string> = TDocument<Tid> & {
   email: string;
   name: string;
 }
 
-export interface UpdateUserInput {
-  email?: string;
-  name?: string;
-}
+export type TCreateUserInput = Pick<TUser, 'email' | 'name'>
 
-export type UserResponse = Omit<User, "createdAt" | "updatedAt"> & {
-  createdAt: string;
-  updatedAt: string;
-};
+export type TUpdateUserInput = Partial<Pick<TUser, 'email' | 'name'>>
+
+export type TUserResponse = Omit<TUser, "createdAt" | "updatedAt"> & Pick<TDocument, 'createdAt' | 'updatedAt'>
