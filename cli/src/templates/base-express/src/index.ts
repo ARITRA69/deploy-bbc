@@ -1,29 +1,72 @@
-import express from "express";
-import { logger as loggerMiddleware } from "./middleware/logger.js";
-import {error_handler} from "./middleware/error-handler.js";
-import routes from "./routes/index.js";
-import { config } from "./config/index.js";
-import { success_handler } from "./middleware/succcess-handler.js";
+import { http_server } from "./app"
+import { connect_db, disconnect_db } from "./service/db"
+import { env } from "./utils/env"
 
-const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(loggerMiddleware);
-app.use(success_handler)
+const FATAL_ERROR_TYPE = ['rejection', 'exception'] as const
 
-// Routes
-app.use("/", routes);
+type TFatalErrorType = (typeof FATAL_ERROR_TYPE)[number]
 
-// Health check
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
-});
+type THandleFatalError = {
+  error: Error
+  type: TFatalErrorType
+}
 
-// Error handler (must be last)
-app.use(error_handler);
+const start_server = async () => {
+ try {
 
-app.listen(config.port, () => {
-  console.log(`🚀 Server running on http://localhost:${config.port}`);
-});
+    await connect_db()
+    http_server.listen(env.port, ()=> {
+      if (env.node_env ==='dev') {
+
+        console.log(`Server is live on : http://localhost:${env.port}`) //TODO: color
+
+      } else {
+        
+        console.log( `Server is line on PORT: ${env.port}`)
+
+      }
+
+    })
+ }catch(error) {
+
+  console.error('Failed to start server...\n',error)
+  process.exit(1)
+
+ }
+}
+
+
+const graceful_shutdown = async () => {
+  try{
+
+    console.log('Shutting down gracefully...\n')
+    await disconnect_db()
+    process.exit(0)
+
+  }catch(error){
+
+    console.error('Error during shutdown...\n',error)
+    process.exit(1)
+
+  }
+}
+
+
+const handle_fatal_error = ({error, type}: THandleFatalError) => {
+  console.error(`Shutting down due to unhandled ${type}...\n`, error)
+  graceful_shutdown()
+}
+
+start_server()
+
+process.on('SIGTERM', graceful_shutdown)
+process.on('SIGINT',graceful_shutdown)
+
+process.on('unhandledRejection',(error:Error) => {
+  handle_fatal_error({error,type:'rejection'})
+})
+
+process.on('uncaughtException',(error: Error) => {
+  handle_fatal_error({error,type: 'exception'})
+})
