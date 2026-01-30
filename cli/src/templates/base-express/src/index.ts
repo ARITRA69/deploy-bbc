@@ -19,7 +19,7 @@ const start_server = async () => {
     http_server.listen(env.port, ()=> {
       if (env.node_env ==='dev') {
 
-        console.log(`Server is live on : http://localhost:${env.port}`)
+        console.log(`Server is live on : http://localhost:${env.port}`) //TODO: color
 
       } else {
         
@@ -32,7 +32,7 @@ const start_server = async () => {
 
   console.error('Failed to start server...\n',error)
   process.exit(1)
-  
+
  }
 }
 
