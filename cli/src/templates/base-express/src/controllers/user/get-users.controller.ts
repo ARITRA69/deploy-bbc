@@ -1,41 +1,18 @@
-import type { Request, Response } from "express";
-import { user_model } from "../../models/user.model.js";
-import type { ApiResponse, ApiError } from "../../types/common/api-response.types.js";
-import type { UserResponse } from "../../types/models/user.types.js";
+import { Request, Response } from "express"
 
-/**
- * Helper to format user response
- */
-function format_user_response(user: any): UserResponse {
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    createdAt: user.createdAt.toISOString(),
-    updatedAt: user.updatedAt.toISOString(),
-  };
+export const get_users = async (req: Request, res: Response) => {
+  //Logic to get all users
+
+  res.status(200).json({
+    message: "User fetch successfully",
+    data: [],
+    pagination: {
+      page:1,
+      limit:20,
+      total_pages: 1,
+      total_count:0
+    }
+  })
 }
 
-/**
- * Get all users
- * GET /users
- */
-export async function get_users(req: Request, res: Response) {
-  try {
-    const users = await user_model.find_all();
-    const formatted_users = users.map(format_user_response);
 
-    const response: ApiResponse<UserResponse[]> = {
-      success: true,
-      data: formatted_users,
-    };
-
-    res.json(response);
-  } catch (error) {
-    const errorResponse: ApiError = {
-      success: false,
-      error: "Failed to fetch users",
-    };
-    res.status(500).json(errorResponse);
-  }
-}

@@ -1,10 +1,10 @@
-import express from "express";
-import user_route from "./user.route.js";
+import express, { Router, Request, Response } from "express";
+import { user_route } from "./user.route.js";
 
-const router = express.Router();
+const router = Router();
 
 // Root route
-router.get("/", (req, res) => {
+router.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Welcome to your Bun backend!",
     docs: "/docs",
@@ -14,4 +14,4 @@ router.get("/", (req, res) => {
 // User routes
 router.use("/users", user_route);
 
-export default router;
+export { router as routes };
